@@ -3,7 +3,7 @@ import re
 from typing import Annotated
 from anyio import current_time
 from fastapi import Form
-from pydantic import BaseModel, EmailStr, field_validator, validator
+from pydantic import BaseModel, EmailStr, field_validator
 from sqlalchemy import TIMESTAMP, Boolean, Column, Integer, String
 from database import Base
 

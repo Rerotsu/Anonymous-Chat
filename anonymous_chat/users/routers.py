@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from anonymous_chat.database import get_db
 from anonymous_chat.users.auth import authenticate_user, create_acces_token, get_password_hash
+from anonymous_chat.users.models import CustomOAuth2PasswordRequestForm
 from anonymous_chat.users.schemas import SUserRegister, SVerifyPhone
 from anonymous_chat.users.dao import UsersDAO
 from anonymous_chat.Exceptions import UserAlreadyExistException, IncorrectEmailOrPasswordException
@@ -33,18 +33,29 @@ async def register(user: SUserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/auth/login")
-async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await authenticate_user(form_data.username, form_data.password)
+async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends()):
+    """
+    Функция Логина пользователя. Проверяет ли существует ли пользователь
+    если нет, возвращает ошибку IncorrecrtLoginOrPasswordExcaption
+    если да, создает токен, для входа
+
+    :param ford_data: кастомная форма входа
+    :param db:
+    :retur: Сообщение о успешном входе, токен и формат токена
+    """
+    user = await authenticate_user(form_data.email_or_number, form_data.password)
     if not user:
         raise IncorrectEmailOrPasswordException
-    access_token = create_acces_token({"sub": str(user.id)})
+    access_token = create_acces_token({"sub": str(user.email)})
     welcome = f'Добро пожаловать Пользователь - {user.id}'
     return {"msg": welcome, "access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/confirm-email")
 async def confirm_email(token: str, db: Session = Depends(get_db)):
-    # Логика для подтверждения электронной почты
+    """
+    Функция подтверждения Email'а
+    """
     pass
 
 

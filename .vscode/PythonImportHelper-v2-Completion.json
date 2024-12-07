@@ -272,14 +272,6 @@
         "documentation": {}
     },
     {
-        "label": "validator",
-        "importPath": "pydantic",
-        "description": "pydantic",
-        "isExtraImport": true,
-        "detail": "pydantic",
-        "documentation": {}
-    },
-    {
         "label": "BaseModel",
         "importPath": "pydantic",
         "description": "pydantic",
@@ -317,6 +309,15 @@
         "description": "pydantic",
         "isExtraImport": true,
         "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "smtplib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "smtplib",
+        "description": "smtplib",
+        "detail": "smtplib",
         "documentation": {}
     },
     {
@@ -361,6 +362,14 @@
     },
     {
         "label": "Users",
+        "importPath": "anonymous_chat.users.models",
+        "description": "anonymous_chat.users.models",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.models",
+        "documentation": {}
+    },
+    {
+        "label": "CustomOAuth2PasswordRequestForm",
         "importPath": "anonymous_chat.users.models",
         "description": "anonymous_chat.users.models",
         "isExtraImport": true,
@@ -422,14 +431,6 @@
         "description": "anyio",
         "isExtraImport": true,
         "detail": "anyio",
-        "documentation": {}
-    },
-    {
-        "label": "OAuth2PasswordRequestForm",
-        "importPath": "fastapi.security",
-        "description": "fastapi.security",
-        "isExtraImport": true,
-        "detail": "fastapi.security",
         "documentation": {}
     },
     {
@@ -558,7 +559,7 @@
         "kind": 2,
         "importPath": "anonymous_chat.users.auth",
         "description": "anonymous_chat.users.auth",
-        "peekOfCode": "def get_password_hash(password: str) -> str:\n    return pwd_context.hash(password)\ndef verify_password(plain_password, hashed_password) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\ndef create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(minutes=120)\n    to_encode.update({\"exp\": expire, \"sub\": data.get(\"email\")})\n    encoded_jwt = jwt.encode(\n        to_encode, settings.SECRET_KEY, settings.ALGORITHM",
+        "peekOfCode": "def get_password_hash(password: str) -> str:\n    return pwd_context.hash(password)\ndef verify_password(plain_password, hashed_password) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\ndef create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(hours=2)\n    to_encode.update({\"exp\": expire, \"sub\": data.get(\"email\")})\n    encoded_jwt = jwt.encode(\n        to_encode, settings.SECRET_KEY, settings.ALGORITHM",
         "detail": "anonymous_chat.users.auth",
         "documentation": {}
     },
@@ -567,7 +568,7 @@
         "kind": 2,
         "importPath": "anonymous_chat.users.auth",
         "description": "anonymous_chat.users.auth",
-        "peekOfCode": "def verify_password(plain_password, hashed_password) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\ndef create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(minutes=120)\n    to_encode.update({\"exp\": expire, \"sub\": data.get(\"email\")})\n    encoded_jwt = jwt.encode(\n        to_encode, settings.SECRET_KEY, settings.ALGORITHM\n    )\n    return encoded_jwt",
+        "peekOfCode": "def verify_password(plain_password, hashed_password) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\ndef create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(hours=2)\n    to_encode.update({\"exp\": expire, \"sub\": data.get(\"email\")})\n    encoded_jwt = jwt.encode(\n        to_encode, settings.SECRET_KEY, settings.ALGORITHM\n    )\n    return encoded_jwt",
         "detail": "anonymous_chat.users.auth",
         "documentation": {}
     },
@@ -576,7 +577,16 @@
         "kind": 2,
         "importPath": "anonymous_chat.users.auth",
         "description": "anonymous_chat.users.auth",
-        "peekOfCode": "def create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(minutes=120)\n    to_encode.update({\"exp\": expire, \"sub\": data.get(\"email\")})\n    encoded_jwt = jwt.encode(\n        to_encode, settings.SECRET_KEY, settings.ALGORITHM\n    )\n    return encoded_jwt\nasync def verify_token(token: str) -> TokenData:\n    try:",
+        "peekOfCode": "def create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(hours=2)\n    to_encode.update({\"exp\": expire, \"sub\": data.get(\"email\")})\n    encoded_jwt = jwt.encode(\n        to_encode, settings.SECRET_KEY, settings.ALGORITHM\n    )\n    return encoded_jwt\ndef create_email_confirmation_token(email: str):\n    expiration = datetime.now(timezone.utc) + timedelta(hours=1)",
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "create_email_confirmation_token",
+        "kind": 2,
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "peekOfCode": "def create_email_confirmation_token(email: str):\n    expiration = datetime.now(timezone.utc) + timedelta(hours=1)\n    payload = {\"sub\": email, \"exp\": expiration}\n    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)\n    return token\nasync def verify_token(token: str) -> TokenData:\n    try:\n        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])\n        email: Optional[str] = payload.get(\"sub\")\n        if email is None:",
         "detail": "anonymous_chat.users.auth",
         "documentation": {}
     },
@@ -585,7 +595,16 @@
         "kind": 5,
         "importPath": "anonymous_chat.users.auth",
         "description": "anonymous_chat.users.auth",
-        "peekOfCode": "pwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\ndef get_password_hash(password: str) -> str:\n    return pwd_context.hash(password)\ndef verify_password(plain_password, hashed_password) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\ndef create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(minutes=120)\n    to_encode.update({\"exp\": expire, \"sub\": data.get(\"email\")})\n    encoded_jwt = jwt.encode(",
+        "peekOfCode": "pwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\nsmtpObj = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)\nsmtpObj.starttls()\nsmtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)\ndef get_password_hash(password: str) -> str:\n    return pwd_context.hash(password)\ndef verify_password(plain_password, hashed_password) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\ndef create_acces_token(data: dict) -> str:\n    to_encode = data.copy()",
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "smtpObj",
+        "kind": 5,
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "peekOfCode": "smtpObj = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)\nsmtpObj.starttls()\nsmtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)\ndef get_password_hash(password: str) -> str:\n    return pwd_context.hash(password)\ndef verify_password(plain_password, hashed_password) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\ndef create_acces_token(data: dict) -> str:\n    to_encode = data.copy()\n    expire = datetime.now(timezone.utc) + timedelta(hours=2)",
         "detail": "anonymous_chat.users.auth",
         "documentation": {}
     },

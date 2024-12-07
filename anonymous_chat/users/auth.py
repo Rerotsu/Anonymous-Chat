@@ -4,6 +4,7 @@ from typing import Optional
 from jose.jwt import jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
+import smtplib
 
 from anonymous_chat.config import settings
 from anonymous_chat.users.dao import UsersDAO
@@ -12,6 +13,10 @@ from anonymous_chat.Exceptions import CannotContainUsername
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+smtpObj = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)
+smtpObj.starttls()
+smtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)
 
 
 def get_password_hash(password: str) -> str:
@@ -24,12 +29,19 @@ def verify_password(plain_password, hashed_password) -> bool:
 
 def create_acces_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=120)
+    expire = datetime.now(timezone.utc) + timedelta(hours=2)
     to_encode.update({"exp": expire, "sub": data.get("email")})
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, settings.ALGORITHM
     )
     return encoded_jwt
+
+
+def create_email_confirmation_token(email: str):
+    expiration = datetime.now(timezone.utc) + timedelta(hours=1)
+    payload = {"sub": email, "exp": expiration}
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return token
 
 
 async def verify_token(token: str) -> TokenData:
