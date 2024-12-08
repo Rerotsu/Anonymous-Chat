@@ -19,6 +19,8 @@ class Users(Base):
     phone_verified = Column(Boolean, nullable=False, default=False)
     email_token_verify = Column(String, nullable=True)
     phone_token_verify = Column(String, nullable=True)
+    is_admin = Column(Boolean, nullable=False, default=False)
+    is_banned = Column(Boolean, nullable=False, default=False)
     created = Column(TIMESTAMP, nullable=False, default=current_time)
 
     def __str__(self):

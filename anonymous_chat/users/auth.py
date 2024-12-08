@@ -1,14 +1,19 @@
 from datetime import datetime, timedelta, timezone
+import random
+from fastapi import Depends
+from sqlalchemy.orm import Session
 from typing import Optional
+from twilio.rest import Client
 
-from jose.jwt import jwt
+from jose import jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
 import smtplib
 
 from anonymous_chat.config import settings
+from anonymous_chat.database import get_db
 from anonymous_chat.users.dao import UsersDAO
-from anonymous_chat.users.models import TokenData
+from anonymous_chat.users.models import TokenData, Users
 from anonymous_chat.Exceptions import CannotContainUsername
 
 
@@ -42,6 +47,37 @@ def create_email_confirmation_token(email: str):
     payload = {"sub": email, "exp": expiration}
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return token
+
+
+def send_confirmation_email(email, token):
+    confirmation_url = f"http://yourdomain.com/confirm-email?token={token}"
+    smtpObj.sendmail(settings.SMTP_USER, email, f"Подтвердите Электронную почту, для доступа к функциям сайта {confirmation_url}")
+
+
+def generate_verification_code() -> str:
+    return str(random.randint(100000, 999999))
+
+
+def send_sms(phone: str, code: str):
+    try:
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+        message = client.messages.create(
+            body=f'Код подтверждения для Anon.chat: {code}',  # Текст сообщения с кодом
+            from_=settings.NUMBER,  # Номер, с которого отправляется сообщение
+            to=phone  # Номер получателя
+        )
+        return message
+    except Exception as e:
+        raise e
+
+
+def get_stored_code(phone_number, db: Session = Depends(get_db)):
+    user = db.query(Users).filter(Users.phone_number == phone_number).first()
+    if user:
+        return user.verification_code
+    else:
+        return None
 
 
 async def verify_token(token: str) -> TokenData:

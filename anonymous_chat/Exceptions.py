@@ -16,3 +16,25 @@ CannotContainUsername = HTTPException(
     detail="Token does not contain username",
     headers={"WWW-Authenticate": "Bearer"},
 )
+UserNotFound = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail="Пользователь не найден"
+)
+
+TokenHasExpired = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="Токен не действителен"
+)
+
+IncorrectToken = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="Неверный токен"
+)
+VerifCodeNotFound = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail="Верификационный код не найден или недействителен")
+
+IncorrectVerifCode = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="Неверный код"
+)

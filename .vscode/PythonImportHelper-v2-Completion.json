@@ -8,6 +8,14 @@
         "documentation": {}
     },
     {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
         "label": "Form",
         "importPath": "fastapi",
         "description": "fastapi",
@@ -152,6 +160,14 @@
         "documentation": {}
     },
     {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
         "label": "DeclarativeBase",
         "importPath": "sqlalchemy.orm",
         "description": "sqlalchemy.orm",
@@ -192,6 +208,15 @@
         "documentation": {}
     },
     {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
         "label": "Optional",
         "importPath": "typing",
         "description": "typing",
@@ -224,11 +249,27 @@
         "documentation": {}
     },
     {
-        "label": "jwt",
-        "importPath": "jose.jwt",
-        "description": "jose.jwt",
+        "label": "Client",
+        "importPath": "twilio.rest",
+        "description": "twilio.rest",
         "isExtraImport": true,
-        "detail": "jose.jwt",
+        "detail": "twilio.rest",
+        "documentation": {}
+    },
+    {
+        "label": "jwt",
+        "importPath": "jose",
+        "description": "jose",
+        "isExtraImport": true,
+        "detail": "jose",
+        "documentation": {}
+    },
+    {
+        "label": "jwt",
+        "importPath": "jose",
+        "description": "jose",
+        "isExtraImport": true,
+        "detail": "jose",
         "documentation": {}
     },
     {
@@ -288,6 +329,14 @@
         "documentation": {}
     },
     {
+        "label": "PhoneNumber",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
         "label": "ConfigDict",
         "importPath": "pydantic",
         "description": "pydantic",
@@ -337,6 +386,30 @@
         "documentation": {}
     },
     {
+        "label": "settings",
+        "importPath": "anonymous_chat.config",
+        "description": "anonymous_chat.config",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.config",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "importPath": "anonymous_chat.database",
+        "description": "anonymous_chat.database",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.database",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "importPath": "anonymous_chat.database",
+        "description": "anonymous_chat.database",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.database",
+        "documentation": {}
+    },
+    {
         "label": "UsersDAO",
         "importPath": "anonymous_chat.users.dao",
         "description": "anonymous_chat.users.dao",
@@ -369,7 +442,23 @@
         "documentation": {}
     },
     {
+        "label": "Users",
+        "importPath": "anonymous_chat.users.models",
+        "description": "anonymous_chat.users.models",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.models",
+        "documentation": {}
+    },
+    {
         "label": "CustomOAuth2PasswordRequestForm",
+        "importPath": "anonymous_chat.users.models",
+        "description": "anonymous_chat.users.models",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.models",
+        "documentation": {}
+    },
+    {
+        "label": "Users",
         "importPath": "anonymous_chat.users.models",
         "description": "anonymous_chat.users.models",
         "isExtraImport": true,
@@ -385,6 +474,30 @@
         "documentation": {}
     },
     {
+        "label": "IncorrectEmailOrPasswordException",
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "IncorrectToken",
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "TokenHasExpired",
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
         "label": "UserAlreadyExistException",
         "importPath": "anonymous_chat.Exceptions",
         "description": "anonymous_chat.Exceptions",
@@ -393,7 +506,15 @@
         "documentation": {}
     },
     {
-        "label": "IncorrectEmailOrPasswordException",
+        "label": "UserNotFound",
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "VerifCodeNotFound",
         "importPath": "anonymous_chat.Exceptions",
         "description": "anonymous_chat.Exceptions",
         "isExtraImport": true,
@@ -434,14 +555,6 @@
         "documentation": {}
     },
     {
-        "label": "get_db",
-        "importPath": "anonymous_chat.database",
-        "description": "anonymous_chat.database",
-        "isExtraImport": true,
-        "detail": "anonymous_chat.database",
-        "documentation": {}
-    },
-    {
         "label": "authenticate_user",
         "importPath": "anonymous_chat.users.auth",
         "description": "anonymous_chat.users.auth",
@@ -458,7 +571,47 @@
         "documentation": {}
     },
     {
+        "label": "create_email_confirmation_token",
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "generate_verification_code",
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
         "label": "get_password_hash",
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "get_stored_code",
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "send_confirmation_email",
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "isExtraImport": true,
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "send_sms",
         "importPath": "anonymous_chat.users.auth",
         "description": "anonymous_chat.users.auth",
         "isExtraImport": true,
@@ -586,7 +739,43 @@
         "kind": 2,
         "importPath": "anonymous_chat.users.auth",
         "description": "anonymous_chat.users.auth",
-        "peekOfCode": "def create_email_confirmation_token(email: str):\n    expiration = datetime.now(timezone.utc) + timedelta(hours=1)\n    payload = {\"sub\": email, \"exp\": expiration}\n    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)\n    return token\nasync def verify_token(token: str) -> TokenData:\n    try:\n        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])\n        email: Optional[str] = payload.get(\"sub\")\n        if email is None:",
+        "peekOfCode": "def create_email_confirmation_token(email: str):\n    expiration = datetime.now(timezone.utc) + timedelta(hours=1)\n    payload = {\"sub\": email, \"exp\": expiration}\n    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)\n    return token\ndef send_confirmation_email(email, token):\n    confirmation_url = f\"http://yourdomain.com/confirm-email?token={token}\"\n    smtpObj.sendmail(settings.SMTP_USER, email, f\"Подтвердите Электронную почту, для доступа к функциям сайта {confirmation_url}\")\ndef generate_verification_code() -> str:\n    return str(random.randint(100000, 999999))",
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "send_confirmation_email",
+        "kind": 2,
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "peekOfCode": "def send_confirmation_email(email, token):\n    confirmation_url = f\"http://yourdomain.com/confirm-email?token={token}\"\n    smtpObj.sendmail(settings.SMTP_USER, email, f\"Подтвердите Электронную почту, для доступа к функциям сайта {confirmation_url}\")\ndef generate_verification_code() -> str:\n    return str(random.randint(100000, 999999))\ndef send_sms(phone: str, code: str):\n    try:\n        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)\n        message = client.messages.create(\n            body=f'Код подтверждения для Anon.chat: {code}',  # Текст сообщения с кодом",
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "generate_verification_code",
+        "kind": 2,
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "peekOfCode": "def generate_verification_code() -> str:\n    return str(random.randint(100000, 999999))\ndef send_sms(phone: str, code: str):\n    try:\n        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)\n        message = client.messages.create(\n            body=f'Код подтверждения для Anon.chat: {code}',  # Текст сообщения с кодом\n            from_=settings.NUMBER,  # Номер, с которого отправляется сообщение\n            to=phone  # Номер получателя\n        )",
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "send_sms",
+        "kind": 2,
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "peekOfCode": "def send_sms(phone: str, code: str):\n    try:\n        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)\n        message = client.messages.create(\n            body=f'Код подтверждения для Anon.chat: {code}',  # Текст сообщения с кодом\n            from_=settings.NUMBER,  # Номер, с которого отправляется сообщение\n            to=phone  # Номер получателя\n        )\n        return message\n    except Exception as e:",
+        "detail": "anonymous_chat.users.auth",
+        "documentation": {}
+    },
+    {
+        "label": "get_stored_code",
+        "kind": 2,
+        "importPath": "anonymous_chat.users.auth",
+        "description": "anonymous_chat.users.auth",
+        "peekOfCode": "def get_stored_code(phone_number, db: Session = Depends(get_db)):\n    user = db.query(Users).filter(Users.phone_number == phone_number).first()\n    if user:\n        return user.verification_code\n    else:\n        return None\nasync def verify_token(token: str) -> TokenData:\n    try:\n        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])\n        email: Optional[str] = payload.get(\"sub\")",
         "detail": "anonymous_chat.users.auth",
         "documentation": {}
     },
@@ -658,7 +847,7 @@
         "kind": 6,
         "importPath": "anonymous_chat.users.schemas",
         "description": "anonymous_chat.users.schemas",
-        "peekOfCode": "class SUserRegister(BaseModel):\n    email: EmailStr\n    password: str\nclass SVerifyPhone(BaseModel):\n    phone_number: str",
+        "peekOfCode": "class SUserRegister(BaseModel):\n    email: EmailStr\n    phone_number = PhoneNumber\n    password: str\nclass SVerifyPhone(BaseModel):\n    phone_number: PhoneNumber\n    code: str",
         "detail": "anonymous_chat.users.schemas",
         "documentation": {}
     },
@@ -667,7 +856,7 @@
         "kind": 6,
         "importPath": "anonymous_chat.users.schemas",
         "description": "anonymous_chat.users.schemas",
-        "peekOfCode": "class SVerifyPhone(BaseModel):\n    phone_number: str",
+        "peekOfCode": "class SVerifyPhone(BaseModel):\n    phone_number: PhoneNumber\n    code: str",
         "detail": "anonymous_chat.users.schemas",
         "documentation": {}
     },
@@ -730,7 +919,7 @@
         "kind": 5,
         "importPath": "anonymous_chat.Exceptions",
         "description": "anonymous_chat.Exceptions",
-        "peekOfCode": "IncorrectEmailOrPasswordException = HTTPException(\n    status_code=status.HTTP_401_UNAUTHORIZED,\n    detail=\"Неверная почта или пароль\"\n)\nCannotContainUsername = HTTPException(\n    status_code=status.HTTP_401_UNAUTHORIZED,\n    detail=\"Token does not contain username\",\n    headers={\"WWW-Authenticate\": \"Bearer\"},\n)",
+        "peekOfCode": "IncorrectEmailOrPasswordException = HTTPException(\n    status_code=status.HTTP_401_UNAUTHORIZED,\n    detail=\"Неверная почта или пароль\"\n)\nCannotContainUsername = HTTPException(\n    status_code=status.HTTP_401_UNAUTHORIZED,\n    detail=\"Token does not contain username\",\n    headers={\"WWW-Authenticate\": \"Bearer\"},\n)\nUserNotFound = HTTPException(",
         "detail": "anonymous_chat.Exceptions",
         "documentation": {}
     },
@@ -739,7 +928,52 @@
         "kind": 5,
         "importPath": "anonymous_chat.Exceptions",
         "description": "anonymous_chat.Exceptions",
-        "peekOfCode": "CannotContainUsername = HTTPException(\n    status_code=status.HTTP_401_UNAUTHORIZED,\n    detail=\"Token does not contain username\",\n    headers={\"WWW-Authenticate\": \"Bearer\"},\n)",
+        "peekOfCode": "CannotContainUsername = HTTPException(\n    status_code=status.HTTP_401_UNAUTHORIZED,\n    detail=\"Token does not contain username\",\n    headers={\"WWW-Authenticate\": \"Bearer\"},\n)\nUserNotFound = HTTPException(\n    status_code=status.HTTP_404_NOT_FOUND,\n    detail=\"Пользователь не найден\"\n)\nTokenHasExpired = HTTPException(",
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "UserNotFound",
+        "kind": 5,
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "peekOfCode": "UserNotFound = HTTPException(\n    status_code=status.HTTP_404_NOT_FOUND,\n    detail=\"Пользователь не найден\"\n)\nTokenHasExpired = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,\n    detail=\"Токен не действителен\"\n)\nIncorrectToken = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,",
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "TokenHasExpired",
+        "kind": 5,
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "peekOfCode": "TokenHasExpired = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,\n    detail=\"Токен не действителен\"\n)\nIncorrectToken = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,\n    detail=\"Неверный токен\"\n)\nVerifCodeNotFound = HTTPException(\n    status_code=status.HTTP_404_NOT_FOUND,",
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "IncorrectToken",
+        "kind": 5,
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "peekOfCode": "IncorrectToken = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,\n    detail=\"Неверный токен\"\n)\nVerifCodeNotFound = HTTPException(\n    status_code=status.HTTP_404_NOT_FOUND,\n    detail=\"Верификационный код не найден или недействителен\")\nIncorrectVerifCode = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,\n    detail=\"Неверный код\"",
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "VerifCodeNotFound",
+        "kind": 5,
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "peekOfCode": "VerifCodeNotFound = HTTPException(\n    status_code=status.HTTP_404_NOT_FOUND,\n    detail=\"Верификационный код не найден или недействителен\")\nIncorrectVerifCode = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,\n    detail=\"Неверный код\"\n)",
+        "detail": "anonymous_chat.Exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "IncorrectVerifCode",
+        "kind": 5,
+        "importPath": "anonymous_chat.Exceptions",
+        "description": "anonymous_chat.Exceptions",
+        "peekOfCode": "IncorrectVerifCode = HTTPException(\n    status_code=status.HTTP_400_BAD_REQUEST,\n    detail=\"Неверный код\"\n)",
         "detail": "anonymous_chat.Exceptions",
         "documentation": {}
     },
