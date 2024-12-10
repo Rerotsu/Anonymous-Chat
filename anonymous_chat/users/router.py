@@ -150,9 +150,3 @@ async def verify_phone(phone_schemas: SVerifyPhone, db: Session = Depends(get_db
     db.commit()
 
     return {"msg": "Номер телефона подтвержден"}
-
-
-@router.post("/confirm-phone")
-async def confirm_phone(code: str, db: Session = Depends(get_db)):
-    # Логика для подтверждения номера телефона
-    pass

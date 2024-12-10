@@ -13,7 +13,8 @@ else:
     DATABASE_PARAMS = {}
 
 
-engine = create_async_engine(DATABASE_URL, **DATABASE_PARAMS)
+DATABASE_URL = "postgresql+asyncpg://user:password@localhost/dbname"
+engine = create_async_engine(DATABASE_URL, echo=True)
 
 
 async_session_maker = sessionmaker(

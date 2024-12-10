@@ -63,9 +63,9 @@ def send_sms(phone: str, code: str):
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
         message = client.messages.create(
-            body=f'Код подтверждения для Anon.chat: {code}',  # Текст сообщения с кодом
-            from_=settings.NUMBER,  # Номер, с которого отправляется сообщение
-            to=phone  # Номер получателя
+            body=f'Код подтверждения для Anon.chat: {code}',
+            from_=settings.NUMBER,
+            to=phone
         )
         return message
     except Exception as e:
@@ -75,7 +75,7 @@ def send_sms(phone: str, code: str):
 def get_stored_code(phone_number, db: Session = Depends(get_db)):
     user = db.query(Users).filter(Users.phone_number == phone_number).first()
     if user:
-        return user.verification_code
+        return user.phone_token_verify
     else:
         return None
 
