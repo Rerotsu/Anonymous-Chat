@@ -1,5 +1,5 @@
 from typing import Literal
-from pydantic import ConfigDict, ValidationInfo, field_validator
+from pydantic import ValidationInfo, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -19,10 +19,20 @@ class Settings(BaseSettings):
         values = info.data
         return f"postgresql+asyncpg://{values['DB_USER']}:{values['DB_PASS']}@{values['DB_HOST']}:{values['DB_PORT']}/{values['DB_NAME']}"
 
+    SMTP_HOST: str
+    SMTP_PORT: str
+    SMTP_USER: str
+    SMTP_PASS: str
+
+    TWILIO_ACCOUNT_SID: str
+    TWILIO_AUTH_TOKEN: str
+    NUMBER: str
+
     SECRET_KEY: str
     ALGHORITHM: str
 
-    model_config = ConfigDict(env_file=".env", arbitrary_types_allowed=True)
+    class Config:
+        extra = 'allow'
 
 
 settings = Settings()

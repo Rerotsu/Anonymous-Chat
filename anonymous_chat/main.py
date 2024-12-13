@@ -1,14 +1,12 @@
-from contextlib import asynccontextmanager
-from typing import AsyncIterator
+
 from fastapi import FastAPI
-from fastapi_cache import FastAPICache
-from fastapi_cache.backends.redis import RedisBackend
-from redis import asyncio as aioredis
 
-from anonymous_chat.config import settings
-from anonymous_chat.users.router import router as user_routers
+from anonymous_chat.users.router import router as user_router
+from anonymous_chat.chats.router import router as chat_router
+from anonymous_chat.chats.messages.router import router as messages_router
 
 
+"""
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     redis = aioredis.from_url(
@@ -17,7 +15,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         )
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
+"""
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
-app.include_router(user_routers)
+app.include_router(user_router)
+app.include_router(chat_router)
+app.include_router(messages_router)

@@ -12,16 +12,12 @@ import smtplib
 
 from anonymous_chat.config import settings
 from anonymous_chat.database import get_db
-from anonymous_chat.users.dao import UsersDAO
-from anonymous_chat.users.models import TokenData, Users
+from anonymous_chat.users.dao import UserDAO
+from anonymous_chat.users.models import TokenData, User
 from anonymous_chat.Exceptions import CannotContainUsername
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-smtpObj = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)
-smtpObj.starttls()
-smtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)
 
 
 def get_password_hash(password: str) -> str:
@@ -51,7 +47,16 @@ def create_email_confirmation_token(email: str):
 
 def send_confirmation_email(email, token):
     confirmation_url = f"http://yourdomain.com/confirm-email?token={token}"
-    smtpObj.sendmail(settings.SMTP_USER, email, f"Подтвердите Электронную почту, для доступа к функциям сайта {confirmation_url}")
+    try:
+        smtpObj = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)
+        smtpObj.starttls()
+        smtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)
+
+        message = f"Подтвердите Электронную почту, для доступа к функциям сайта {confirmation_url}"
+        smtpObj.sendmail(settings.SMTP_USER, email, message)
+        smtpObj.quit()
+    except smtplib.SMTPException as e:
+        print(f"SMTP error occurred: {e}")
 
 
 def generate_verification_code() -> str:
@@ -73,7 +78,7 @@ def send_sms(phone: str, code: str):
 
 
 def get_stored_code(phone_number, db: Session = Depends(get_db)):
-    user = db.query(Users).filter(Users.phone_number == phone_number).first()
+    user = db.query(User).filter(User.phone_number == phone_number).first()
     if user:
         return user.phone_token_verify
     else:
@@ -93,7 +98,7 @@ async def verify_token(token: str) -> TokenData:
 
 
 async def authenticate_user(email: EmailStr, password: str):
-    user = await UsersDAO.find_one_or_none(email=email)
+    user = await UserDAO.find_one_or_none(db=get_db, email=email)
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user

@@ -1,14 +1,16 @@
 from dataclasses import dataclass
 import re
+from sqlalchemy.orm import relationship
+
 from typing import Annotated
 from anyio import current_time
 from fastapi import Form
 from pydantic import BaseModel, EmailStr, field_validator
 from sqlalchemy import TIMESTAMP, Boolean, Column, Integer, String
-from database import Base
+from anonymous_chat.database import Base
 
 
-class Users(Base):
+class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
@@ -23,6 +25,9 @@ class Users(Base):
     is_banned = Column(Boolean, nullable=False, default=False)
     created = Column(TIMESTAMP, nullable=False, default=current_time)
 
+    message = relationship("Message", back_populates="user")
+    chat_participants = relationship("ChatParticipants", back_populates="user")
+
     def __str__(self):
         return f"Пользователь: {self.id},{self.email},{self.phone_number}"
 
@@ -33,7 +38,7 @@ class TokenData():
 
 
 class CustomOAuth2PasswordRequestForm(BaseModel):
-    email_or_Number: Annotated[str, Form(...)]
+    email_or_number: Annotated[str, Form(...)]
     password: Annotated[str, Form(...)]
 
     @field_validator('email_or_number')
@@ -43,9 +48,8 @@ class CustomOAuth2PasswordRequestForm(BaseModel):
             return value
         except ValueError:
             pass
-        # Проверка на номер телефона (пример для формата +1234567890)
-        phone_regex = r'^\+?(7|380|375)\d{9,15}$'  # Регулярное выражение для номера телефона
+        phone_regex = r'^\+?(7|380|375)\d{9,15}$'
         if re.match(phone_regex, value):
-            return value  # Если это корректный номер телефона, возвращаем его
+            return value
 
-        raise ValueError("username must be a valid email address or phone number")
+        raise ValueError("Никнейм должен быть похож на номер телефона или Email")

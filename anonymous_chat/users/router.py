@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from jose import jwt
 
 from anonymous_chat.database import get_db
@@ -13,9 +13,9 @@ from anonymous_chat.users.auth import (
     send_confirmation_email,
     send_sms
 )
-from anonymous_chat.users.models import CustomOAuth2PasswordRequestForm, Users
+from anonymous_chat.users.models import CustomOAuth2PasswordRequestForm, User
 from anonymous_chat.users.schemas import SUserRegister, SVerifyPhone
-from anonymous_chat.users.dao import UsersDAO
+from anonymous_chat.users.dao import UserDAO
 from anonymous_chat.config import settings
 from anonymous_chat.Exceptions import (
     IncorrectEmailOrPasswordException, IncorrectToken,
@@ -29,7 +29,7 @@ router = APIRouter(
 
 
 @router.post("/auth/register")
-async def register(user: SUserRegister, db: Session = Depends(get_db)):
+async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
     """
     Функция регистрации пользователя. Проверяет существует ли пользователь по почте,
     если да, возвращает ошибку UserAlreadyExistsException
@@ -39,7 +39,7 @@ async def register(user: SUserRegister, db: Session = Depends(get_db)):
     :param db: получает сессию в БД для добавления пользователя
     :retur: Сообщение "Вы успешно зарегестрировались"
     """
-    existing_user = await UsersDAO.find_one_or_none(email=user.email.lower())
+    existing_user = await UserDAO.find_one_or_none(db=db, email=user.email.lower())
     if existing_user:
         raise UserAlreadyExistException
 
@@ -47,7 +47,8 @@ async def register(user: SUserRegister, db: Session = Depends(get_db)):
     email_token = create_email_confirmation_token(user.email)
     send_confirmation_email(user.email, email_token)
 
-    await UsersDAO.add(
+    await UserDAO.add(
+        db=db,
         email=user.email,
         phone_number=user.phone_number,
         hashed_password=hashed_password,
@@ -80,7 +81,7 @@ async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends()):
 @router.get("/confirm-email")
 async def confirm_email(
     token: str,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Функция подтверждения Email'а. Создается токен и отправляется письмом на почту
@@ -92,7 +93,7 @@ async def confirm_email(
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         email = payload.get("sub")
 
-        user = db.query(Users).filter(Users.email == email).first()
+        user = db.query(User).filter(User.email == email).first()
         if not user:
             raise UserNotFound
 
@@ -107,14 +108,14 @@ async def confirm_email(
 
 
 @router.post("/send_verify-phone")
-async def send_verify_phone(phone_schemas: SVerifyPhone, db: Session = Depends(get_db)):
+async def send_verify_phone(phone_schemas: SVerifyPhone, db: AsyncSession = Depends(get_db)):
     """
     Функция для отправки верифицкационного кода на номер телефона пользователя.
 
     :param phone_shcemas: форма для ввода номера телефона
     :param db: получение сессии БД
     """
-    user = db.query(Users).filter(Users.phone == phone_schemas.phone_number).first()
+    user = db.query(User).filter(User.phone == phone_schemas.phone_number).first()
     if not user:
         raise UserNotFound
 
@@ -128,14 +129,14 @@ async def send_verify_phone(phone_schemas: SVerifyPhone, db: Session = Depends(g
 
 
 @router.post("/verify-phone")
-async def verify_phone(phone_schemas: SVerifyPhone, db: Session = Depends(get_db)):
+async def verify_phone(phone_schemas: SVerifyPhone, db: AsyncSession = Depends(get_db)):
     """
     Функция для верификации номера телефона
 
     :param phone: форма для ввода номера телефона
     :param db: получение сессии БД
     """
-    user = db.query(Users).filter(Users.phone == phone_schemas.phone).first()
+    user = db.query(User).filter(User.phone == phone_schemas.phone).first()
     if not user:
         raise UserNotFound
 

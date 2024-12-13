@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from anonymous_chat.database import Base
 
 
-class Messages(Base):
+class Message(Base):
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -14,4 +14,5 @@ class Messages(Base):
     content = Column(Text, nullable=False)
     timestamp = Column(DateTime, server_default=func.now())
 
-    chat = relationship("Chats", back_populates="messages")
+    chat = relationship("Chat", back_populates="message")
+    user = relationship("User", back_populates="message")

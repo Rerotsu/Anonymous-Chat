@@ -1,6 +1,6 @@
 from anonymous_chat.dao.base import BaseDAO
-from anonymous_chat.users.models import Users
+from anonymous_chat.users.models import User
 
 
-class UsersDAO(BaseDAO):
-    model = Users
+class UserDAO(BaseDAO):
+    model = User
