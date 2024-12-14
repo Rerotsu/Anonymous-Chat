@@ -16,7 +16,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     email = Column(String, nullable=False, unique=True)
     phone_number = Column(String, nullable=True, unique=True,)
-    hashed_Password = Column(String, nullable=False)
+    hashed_password = Column(String, nullable=False)
     email_verified = Column(Boolean, nullable=False, default=False)
     phone_verified = Column(Boolean, nullable=False, default=False)
     email_token_verify = Column(String, nullable=True)
@@ -25,7 +25,7 @@ class User(Base):
     is_banned = Column(Boolean, nullable=False, default=False)
     created = Column(TIMESTAMP, nullable=False, default=current_time)
 
-    message = relationship("Message", back_populates="user")
+    messages = relationship("Message", back_populates="user")
     chat_participants = relationship("ChatParticipants", back_populates="user")
 
     def __str__(self):

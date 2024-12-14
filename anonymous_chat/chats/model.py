@@ -19,4 +19,4 @@ class Chat(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     messages = relationship("Message", back_populates="chat")
-    participants = relationship("ChatParticipants", back_populates="chat")
+    chat_participants = relationship("ChatParticipants", back_populates="chat")

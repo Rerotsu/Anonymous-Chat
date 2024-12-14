@@ -1,3 +1,7 @@
 .vscode/
-.venv/
+anon_venv/
 .env
+__pycache__/
+anonymous_chat/dao/__pycache__/
+anonymous_chat/chats/__pycache__/
+anonymous_chat/__pycache__/

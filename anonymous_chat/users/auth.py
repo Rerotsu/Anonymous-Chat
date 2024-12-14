@@ -20,15 +20,15 @@ from anonymous_chat.Exceptions import CannotContainUsername
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def get_password_hash(password: str) -> str:
+async def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def verify_password(plain_password, hashed_password) -> bool:
+async def verify_password(plain_password, hashed_password) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_acces_token(data: dict) -> str:
+async def create_acces_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(hours=2)
     to_encode.update({"exp": expire, "sub": data.get("email")})
@@ -38,14 +38,14 @@ def create_acces_token(data: dict) -> str:
     return encoded_jwt
 
 
-def create_email_confirmation_token(email: str):
+async def create_email_confirmation_token(email: str):
     expiration = datetime.now(timezone.utc) + timedelta(hours=1)
     payload = {"sub": email, "exp": expiration}
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return token
 
 
-def send_confirmation_email(email, token):
+async def send_confirmation_email(email, token):
     confirmation_url = f"http://yourdomain.com/confirm-email?token={token}"
     try:
         smtpObj = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)
@@ -59,11 +59,11 @@ def send_confirmation_email(email, token):
         print(f"SMTP error occurred: {e}")
 
 
-def generate_verification_code() -> str:
+async def generate_verification_code() -> str:
     return str(random.randint(100000, 999999))
 
 
-def send_sms(phone: str, code: str):
+async def send_sms(phone: str, code: str):
     try:
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
@@ -77,7 +77,7 @@ def send_sms(phone: str, code: str):
         raise e
 
 
-def get_stored_code(phone_number, db: Session = Depends(get_db)):
+async def get_stored_code(phone_number, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.phone_number == phone_number).first()
     if user:
         return user.phone_token_verify

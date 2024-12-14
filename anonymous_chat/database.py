@@ -12,8 +12,6 @@ else:
     DATABASE_URL = settings.DATABASE_URL
     DATABASE_PARAMS = {}
 
-
-DATABASE_URL = "postgresql+asyncpg://user:password@localhost/dbname"
 engine = create_async_engine(DATABASE_URL, **DATABASE_PARAMS)
 
 
@@ -36,3 +34,9 @@ async def get_db() -> AsyncSession:  # type: ignore
 
 class Base(DeclarativeBase):
     pass
+
+
+"""
+НЕ ПОДКЛЮЧАЕТСЯ К БД
+НЕ ЗНАЮ С ЧЕМ СВЯЗАНО
+"""

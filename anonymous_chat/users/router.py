@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import jwt
@@ -43,16 +44,17 @@ async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
     if existing_user:
         raise UserAlreadyExistException
 
-    hashed_password = get_password_hash(user.password)
-    email_token = create_email_confirmation_token(user.email)
-    send_confirmation_email(user.email, email_token)
+    hashed_password = await get_password_hash(user.password)
+    email_token = await create_email_confirmation_token(user.email)
+    await send_confirmation_email(user.email, email_token)
 
     await UserDAO.add(
         db=db,
         email=user.email,
         phone_number=user.phone_number,
         hashed_password=hashed_password,
-        email_token_verify=email_token
+        email_token_verify=email_token,
+        created=datetime.now()
         )
 
     welcome = "Вы успешно зарегестрировались, Пожалуйста, подтвердите Электронную почту, чтобы открыть большенство функций сайта"
