@@ -3,7 +3,8 @@ from fastapi import FastAPI
 
 from anonymous_chat.users.router import router as user_router
 from anonymous_chat.chats.router import router as chat_router
-from anonymous_chat.chats.messages.router import router as messages_router
+from anonymous_chat.chats.messages.router import router as message_router
+from anonymous_chat.pages.router import router as page_router
 
 
 """
@@ -21,4 +22,5 @@ app = FastAPI()
 
 app.include_router(user_router)
 app.include_router(chat_router)
-app.include_router(messages_router)
+app.include_router(message_router)
+app.include_router(page_router)

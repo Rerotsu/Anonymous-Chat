@@ -38,3 +38,8 @@ IncorrectVerifCode = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
     detail="Неверный код"
 )
+
+IncorrectPassword = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="пароли не совпадают"
+)

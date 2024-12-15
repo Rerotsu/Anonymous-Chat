@@ -21,7 +21,7 @@ from anonymous_chat.config import settings
 from anonymous_chat.Exceptions import (
     IncorrectEmailOrPasswordException, IncorrectToken,
     TokenHasExpired, UserAlreadyExistException, UserNotFound,
-    VerifCodeNotFound)
+    VerifCodeNotFound, IncorrectPassword)
 
 router = APIRouter(
     prefix="/user",
@@ -43,6 +43,8 @@ async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
     existing_user = await UserDAO.find_one_or_none(db=db, email=user.email.lower())
     if existing_user:
         raise UserAlreadyExistException
+    if user.password != user.confirm_password:
+        raise IncorrectPassword
 
     hashed_password = await get_password_hash(user.password)
     email_token = await create_email_confirmation_token(user.email)
