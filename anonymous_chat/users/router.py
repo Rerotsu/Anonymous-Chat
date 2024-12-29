@@ -22,11 +22,15 @@ from anonymous_chat.Exceptions import (
     IncorrectEmailOrPasswordException, IncorrectToken,
     TokenHasExpired, UserAlreadyExistException, UserNotFound,
     VerifCodeNotFound, IncorrectPassword)
+import logging
+
 
 router = APIRouter(
     prefix="/user",
     tags=["Auth & Пользователи"]
 )
+
+logger = logging.getLogger(__name__)
 
 
 @router.post("/auth/register")
@@ -77,7 +81,7 @@ async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends()):
     user = await authenticate_user(form_data.email_or_number, form_data.password)
     if not user:
         raise IncorrectEmailOrPasswordException
-    access_token = create_acces_token({"sub": str(user.email)})
+    access_token = await create_acces_token({"sub": str(user.id)})
     welcome = f'Добро пожаловать Пользователь - {user.id}'
     return {"msg": welcome, "access_token": access_token, "token_type": "bearer"}
 

@@ -7,7 +7,6 @@ from twilio.rest import Client
 
 from jose import jwt
 from passlib.context import CryptContext
-from pydantic import EmailStr
 import smtplib
 
 from anonymous_chat.config import settings
@@ -97,8 +96,11 @@ async def verify_token(token: str) -> TokenData:
         raise e
 
 
-async def authenticate_user(email: EmailStr, password: str):
-    user = await UserDAO.find_one_or_none(db=get_db, email=email)
-    if not user or not verify_password(password, user.hashed_password):
+async def authenticate_user(identifier: str, password: str):
+    # Сначала проверяем по email
+    user = await UserDAO.find_one_or_none(db=get_db, email=identifier)
+    if not user:
+        user = await UserDAO.find_one_or_none(db=get_db, phone_number=identifier)
+    if not user or not await verify_password(password, user.hashed_password):
         return None
     return user

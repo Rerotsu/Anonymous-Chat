@@ -18,6 +18,13 @@ class SUserRegister(BaseModel):
         except phonenumbers.NumberParseException:
             raise ValueError("Неверный формат номера телефона")
 
+    @field_validator('confirm_password')
+    def passwords_match(cls, v, values):
+        password = getattr(values, 'password', None)
+        if password is not None and v != password:
+            raise ValueError('Пароли не совпадают')
+        return v
+
 
 class SVerifyPhone(BaseModel):
     phone_number: str

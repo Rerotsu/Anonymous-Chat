@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = Field(..., env="ALGORITHM")
 
     class Config:
-        env_file = ".env"  # Укажите файл конфигурации
+        env_file = ".env"
         extra = 'allow'
 
 

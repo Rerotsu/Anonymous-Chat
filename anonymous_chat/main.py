@@ -1,5 +1,6 @@
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 
 from anonymous_chat.users.router import router as user_router
 from anonymous_chat.chats.router import router as chat_router
@@ -24,3 +25,17 @@ app.include_router(user_router)
 app.include_router(chat_router)
 app.include_router(message_router)
 app.include_router(page_router)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+    )
+
+"""
+Ошибка регистрации
+INFO:     127.0.0.1:54471 - "POST /user/auth/register HTTP/1.1" 422 Unprocessable Entity
+исправить обязательно
+"""

@@ -44,7 +44,7 @@ class CustomOAuth2PasswordRequestForm(BaseModel):
     @field_validator('email_or_number')
     def validate_username(cls, value):
         try:
-            EmailStr.validate(value)
+            EmailStr._validate(value)
             return value
         except ValueError:
             pass

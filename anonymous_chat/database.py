@@ -34,9 +34,3 @@ async def get_db() -> AsyncSession:  # type: ignore
 
 class Base(DeclarativeBase):
     pass
-
-
-"""
-НЕ ПОДКЛЮЧАЕТСЯ К БД
-НЕ ЗНАЮ С ЧЕМ СВЯЗАНО
-"""
