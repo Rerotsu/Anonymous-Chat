@@ -1,6 +1,7 @@
 .vscode/
 anon_venv/
 .env
+req_for_dev.txt
 __pycache__/
 anonymous_chat/dao/__pycache__/
 anonymous_chat/chats/__pycache__/

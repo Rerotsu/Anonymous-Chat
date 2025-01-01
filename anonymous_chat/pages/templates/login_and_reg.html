@@ -155,7 +155,7 @@
         fetch('/user/auth/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json' 
             },
             body: JSON.stringify(loginData)
         })
@@ -168,13 +168,14 @@
         .then(data => {
             console.log(data);
             alert('Login successful!');
-            // Здесь можно перенаправить пользователя на другую страницу или обновить интерфейс
+            // Можно перенаправить или выполнить другие действия
         })
         .catch((error) => {
             console.error('Error:', error);
             alert('Login failed: ' + error.message);
         });
     });
+
 
     function toggleForms() {
         const signupForm = document.getElementById('signup-form');

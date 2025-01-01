@@ -68,22 +68,22 @@ async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/auth/login")
-async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends()):
+async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     """
     Функция Логина пользователя. Проверяет ли существует ли пользователь
     если нет, возвращает ошибку IncorrecrtLoginOrPasswordExcaption
     если да, создает токен, для входа
 
-    :param ford_data: кастомная форма входа
-    :param db:
-    :retur: Сообщение о успешном входе, токен и формат токена
+    :param form_data: кастомная форма входа
+    :param db: сессия ДБ
+    :return: Сообщение о успешном входе, токен и формат токена
     """
-    user = await authenticate_user(form_data.email_or_number, form_data.password)
+
+    user = await authenticate_user(form_data.email_or_number, form_data.password, db)
     if not user:
         raise IncorrectEmailOrPasswordException
     access_token = await create_acces_token({"sub": str(user.id)})
-    welcome = f'Добро пожаловать Пользователь - {user.id}'
-    return {"msg": welcome, "access_token": access_token, "token_type": "bearer"}
+    return {"msg": f'Добро пожаловать Пользователь - {user.id}', "access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/confirm-email")

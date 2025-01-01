@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 import random
 from fastapi import Depends
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from twilio.rest import Client
 
@@ -96,11 +97,9 @@ async def verify_token(token: str) -> TokenData:
         raise e
 
 
-async def authenticate_user(identifier: str, password: str):
+async def authenticate_user(identifier: str, password: str, db: AsyncSession = Depends(get_db)):
     # Сначала проверяем по email
-    user = await UserDAO.find_one_or_none(db=get_db, email=identifier)
-    if not user:
-        user = await UserDAO.find_one_or_none(db=get_db, phone_number=identifier)
+    user = await UserDAO.find_one_or_none(db=db, email=identifier)
     if not user or not await verify_password(password, user.hashed_password):
         return None
     return user
