@@ -1,4 +1,5 @@
 from datetime import datetime
+# from math import e
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import jwt
@@ -79,7 +80,7 @@ async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends(), db:
     :return: Сообщение о успешном входе, токен и формат токена
     """
 
-    user = await authenticate_user(form_data.email_or_number, form_data.password, db)
+    user = await authenticate_user(form_data.email, form_data.password, db)
     if not user:
         raise IncorrectEmailOrPasswordException
     access_token = await create_acces_token({"sub": str(user.id)})

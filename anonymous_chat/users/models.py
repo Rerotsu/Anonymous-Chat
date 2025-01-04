@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-import re
+
 from sqlalchemy.orm import relationship
 
 from typing import Annotated
 from anyio import current_time
 from fastapi import Form
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel
 from sqlalchemy import TIMESTAMP, Boolean, Column, Integer, String
 from anonymous_chat.database import Base
 
@@ -38,18 +38,18 @@ class TokenData():
 
 
 class CustomOAuth2PasswordRequestForm(BaseModel):
-    email_or_number: Annotated[str, Form(...)]
+    email: Annotated[str, Form(...)]
     password: Annotated[str, Form(...)]
 
-    @field_validator('email_or_number')
-    def validate_username(cls, value):
-        try:
-            EmailStr._validate(value)
-            return value
-        except ValueError:
-            pass
-        phone_regex = r'^\+?(7|380|375)\d{9,15}$'
-        if re.match(phone_regex, value):
-            return value
+    # @field_validator('email_or_number')
+    # def validate_username(cls, value):
+    #     try:
+    #         EmailStr._validate(value)
+    #         return value
+    #     except ValueError:
+    #         pass
+    #     phone_regex = r'^\+?(7|380|375)\d{9,15}$'
+    #     if re.match(phone_regex, value):
+    #         return value
 
-        raise ValueError("Никнейм должен быть похож на номер телефона или Email")
+    #     raise ValueError("Никнейм должен быть похож на номер телефона или Email")
