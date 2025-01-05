@@ -7,7 +7,7 @@ UserAlreadyExistException = HTTPException(
 )
 
 IncorrectEmailOrPasswordException = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
+    status_code=status.HTTP_400_BAD_REQUEST,
     detail="Неверная почта или пароль"
 )
 
@@ -42,4 +42,9 @@ IncorrectVerifCode = HTTPException(
 IncorrectPassword = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
     detail="пароли не совпадают"
+)
+
+IncorrectEmail = HTTPException(
+    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+    detail="Почта не действительна"
 )

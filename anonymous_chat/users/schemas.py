@@ -1,9 +1,9 @@
 import phonenumbers
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, field_validator
 
 
 class SUserRegister(BaseModel):
-    email: EmailStr
+    email: str
     phone_number: str
     password: str
     confirm_password: str

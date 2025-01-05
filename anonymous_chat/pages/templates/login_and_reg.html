@@ -139,7 +139,7 @@
         })
         .then(data => {
             console.log(data);
-            alert('Login successful!'); 
+            alert('Вход успешно выполнен'); 
             // Можно добавить перенаправление или другие действия
         })
         .catch(error => {
@@ -160,7 +160,7 @@
         };
 
         if (formData.password !== formData.confirm_password) {
-            alert('Passwords do not match!');
+            alert('Пароли не совпадают');
             return;
         }
 
@@ -182,8 +182,8 @@
         })
         .then(data => {
             console.log(data);
-            alert('Registration successful!');
-            // Можно перенаправить или очистить форму
+            alert('Вы успешно зарегистрировались');
+            // здесь перенаправляем на другую страницу
         })
         .catch((error) => {
             console.error('Error:', error);

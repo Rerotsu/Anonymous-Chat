@@ -16,12 +16,12 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     email = Column(String, nullable=False, unique=True)
     phone_number = Column(String, nullable=True, unique=True,)
+    is_admin = Column(Boolean, nullable=False, default=False)
     hashed_password = Column(String, nullable=False)
     email_verified = Column(Boolean, nullable=False, default=False)
     phone_verified = Column(Boolean, nullable=False, default=False)
     email_token_verify = Column(String, nullable=True)
     phone_token_verify = Column(String, nullable=True)
-    is_admin = Column(Boolean, nullable=False, default=False)
     is_banned = Column(Boolean, nullable=False, default=False)
     created = Column(TIMESTAMP, nullable=False, default=current_time)
 
@@ -44,7 +44,7 @@ class CustomOAuth2PasswordRequestForm(BaseModel):
     # @field_validator('email_or_number')
     # def validate_username(cls, value):
     #     try:
-    #         EmailStr._validate(value)
+    #         str._validate(value)
     #         return value
     #     except ValueError:
     #         pass
@@ -52,4 +52,4 @@ class CustomOAuth2PasswordRequestForm(BaseModel):
     #     if re.match(phone_regex, value):
     #         return value
 
-    #     raise ValueError("Никнейм должен быть похож на номер телефона или Email")
+    #     raise ValueError("Вводные данные должены быть похожи на номер телефона или Email")

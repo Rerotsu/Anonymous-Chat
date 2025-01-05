@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "email": "test1@mail.ru",
+        "phone_number": "+7234567890",
+        "hashed_password": "$2b$12$kzMUDRQQsnvdZTJV8RDScuujRMPy4o3vCUsAdyhQRObQrhnx9/mX.",
+        "email_verified": false,
+        "phone_verified": false,
+        "email_token_verify": null,
+        "phone_token_verify": null,
+        "is_admin": false,
+        "is_banned": false,
+        "created": "2023-01-01T00:00:00"
+    },
+    {
+        "id": 2,
+        "email": "test2@mail.ru",
+        "phone_number": "+7234567891",
+        "hashed_password": "$2b$12$kzMUDRQQsnvdZTJV8RDScuujRMPy4o3vCUsAdyhQRObQrhnx9/mX.",
+        "email_verified": true,
+        "phone_verified": false,
+        "email_token_verify": "token123",
+        "phone_token_verify": null,
+        "is_admin": false,
+        "is_banned": false,
+        "created": "2023-01-02T00:00:00"
+    },
+    {
+        "id": 3,
+        "email": "test3@mail.ru",
+        "phone_number": "+7234567892",
+        "hashed_password": "$2b$12$kzMUDRQQsnvdZTJV8RDScuujRMPy4o3vCUsAdyhQRObQrhnx9/mX.",
+        "email_verified": false,
+        "phone_verified": true,
+        "email_token_verify": null,
+        "phone_token_verify": "token456",
+        "is_admin": true,
+        "is_banned": false,
+        "created": "2023-01-03T00:00:00"
+    },
+    {
+        "id": 4,
+        "email": "test4@mail.ru",
+        "phone_number": "+7234567893",
+        "hashed_password": "$2b$12$kzMUDRQQsnvdZTJV8RDScuujRMPy4o3vCUsAdyhQRObQrhnx9/mX.",
+        "email_verified": false,
+        "phone_verified": false,
+        "email_token_verify": null,
+        "phone_token_verify": null,
+        "is_admin": false,
+        "is_banned": true,
+        "created": "2023-01-04T00:00:00"
+    }
+]

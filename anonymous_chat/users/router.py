@@ -1,4 +1,6 @@
 from datetime import datetime
+import re
+
 # from math import e
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,23 +15,26 @@ from anonymous_chat.users.auth import (
     get_password_hash,
     get_stored_code,
     send_confirmation_email,
-    send_sms
+    send_sms,
 )
 from anonymous_chat.users.models import CustomOAuth2PasswordRequestForm, User
 from anonymous_chat.users.schemas import SUserRegister, SVerifyPhone
 from anonymous_chat.users.dao import UserDAO
 from anonymous_chat.config import settings
 from anonymous_chat.Exceptions import (
-    IncorrectEmailOrPasswordException, IncorrectToken,
-    TokenHasExpired, UserAlreadyExistException, UserNotFound,
-    VerifCodeNotFound, IncorrectPassword)
+    IncorrectEmail,
+    IncorrectEmailOrPasswordException,
+    IncorrectPassword,
+    IncorrectToken,
+    TokenHasExpired,
+    UserAlreadyExistException,
+    UserNotFound,
+    VerifCodeNotFound,
+)
 import logging
 
 
-router = APIRouter(
-    prefix="/user",
-    tags=["Auth & Пользователи"]
-)
+router = APIRouter(prefix="/user", tags=["Auth & Пользователи"])
 
 logger = logging.getLogger(__name__)
 
@@ -61,17 +66,20 @@ async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
         phone_number=user.phone_number,
         hashed_password=hashed_password,
         email_token_verify=email_token,
-        created=datetime.now()
-        )
+        created=datetime.now(),
+    )
 
     welcome = "Вы успешно зарегестрировались, Пожалуйста, подтвердите Электронную почту, чтобы открыть большенство функций сайта"
     return {"msg": welcome}
 
 
 @router.post("/auth/login")
-async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+async def login_user(
+    form_data: CustomOAuth2PasswordRequestForm = Depends(),
+    db: AsyncSession = Depends(get_db),
+):
     """
-    Функция Логина пользователя. Проверяет ли существует ли пользователь
+    Функция Логина пользователя. Проверяет действительна ли функция и существует ли пользователь
     если нет, возвращает ошибку IncorrecrtLoginOrPasswordExcaption
     если да, создает токен, для входа
 
@@ -80,18 +88,24 @@ async def login_user(form_data: CustomOAuth2PasswordRequestForm = Depends(), db:
     :return: Сообщение о успешном входе, токен и формат токена
     """
 
+    if not re.match(
+        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", form_data.email
+    ):
+        raise IncorrectEmail
     user = await authenticate_user(form_data.email, form_data.password, db)
+
     if not user:
         raise IncorrectEmailOrPasswordException
     access_token = await create_acces_token({"sub": str(user.id)})
-    return {"msg": f'Добро пожаловать Пользователь - {user.id}', "access_token": access_token, "token_type": "bearer"}
+    return {
+        "msg": f"Добро пожаловать Пользователь - {user.id}",
+        "access_token": access_token,
+        "token_type": "bearer",
+    }
 
 
 @router.get("/confirm-email")
-async def confirm_email(
-    token: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def confirm_email(token: str, db: AsyncSession = Depends(get_db)):
     """
     Функция подтверждения Email'а. Создается токен и отправляется письмом на почту
 
@@ -99,7 +113,9 @@ async def confirm_email(
     :param db: получение сессии БД
     """
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
         email = payload.get("sub")
 
         user = db.query(User).filter(User.email == email).first()
@@ -117,7 +133,9 @@ async def confirm_email(
 
 
 @router.post("/send_verify-phone")
-async def send_verify_phone(phone_schemas: SVerifyPhone, db: AsyncSession = Depends(get_db)):
+async def send_verify_phone(
+    phone_schemas: SVerifyPhone, db: AsyncSession = Depends(get_db)
+):
     """
     Функция для отправки верифицкационного кода на номер телефона пользователя.
 

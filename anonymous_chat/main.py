@@ -33,9 +33,3 @@ async def http_exception_handler(request, exc):
         status_code=exc.status_code,
         content={"detail": exc.detail},
     )
-
-"""
-Ошибка регистрации
-INFO:     127.0.0.1:54471 - "POST /user/auth/register HTTP/1.1" 422 Unprocessable Entity
-исправить обязательно
-"""
