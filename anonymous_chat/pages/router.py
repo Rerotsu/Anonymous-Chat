@@ -16,3 +16,11 @@ async def login_reg_page(request: Request):
         name="login_and_reg.html",
         context={"request": request}
     )
+
+
+@router.get("/main")
+async def main_page(request: Request):
+    return templates.TemplateResponse(
+        name="main.html",
+        context={"request": request}
+    )

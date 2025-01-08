@@ -140,7 +140,7 @@
         .then(data => {
             console.log(data);
             alert('Вход успешно выполнен'); 
-            // Можно добавить перенаправление или другие действия
+            window.location.href = '/pages/main'
         })
         .catch(error => {
             console.error('Error:', error);
@@ -182,8 +182,7 @@
         })
         .then(data => {
             console.log(data);
-            alert('Вы успешно зарегистрировались');
-            // здесь перенаправляем на другую страницу
+            alert('Вы успешно зарегистрировались. Войдите, чтобы продолжить');
         })
         .catch((error) => {
             console.error('Error:', error);

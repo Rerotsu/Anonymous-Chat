@@ -25,7 +25,7 @@ async def chat_endpoint(websocket: WebSocket, db: AsyncSession = Depends(get_db)
         data = await websocket.receive_text()
         data = json.loads(data)
 
-        if data['type'] == 'create_chat':
+        if data['type'] == 'find_chat':
             chat_data = {
                 "id": data['id']
             }
@@ -46,17 +46,16 @@ async def chat_endpoint(websocket: WebSocket, db: AsyncSession = Depends(get_db)
             messages = await messages_dao.get_messages(chat_id, db)
             await websocket.send_text(json.dumps(messages))
 
+        elif data['type'] == 'get_user_info':
+            user_id = data['user_id']
+            user_info = await UserDAO.get_user_info(user_id, db)
+            await websocket.send_text(json.dumps(user_info))
+"""
         elif data['type'] == 'delete_message':
             message_id = data['message_id']
             await messages_dao.delete_message(message_id, db)
             await websocket.send_text("Сообщение удалено")
 
-        elif data['type'] == 'get_user_info':
-            user_id = data['user_id']
-            user_info = await UserDAO.get_user_info(user_id, db)
-            await websocket.send_text(json.dumps(user_info))
-
-"""
         elif data['type'] == 'send_notification':
             notification_data = {
                 "chat_id": data['chat_id'],

@@ -48,5 +48,5 @@ async def get_current_user(token: str = Depends(get_token), db: AsyncSession = D
     user = await UserDAO.find_by_id(int(user_id), db=db)
     if not user:
         raise UserIsNotPresent
-    
+
     return user
