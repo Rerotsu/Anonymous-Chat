@@ -44,7 +44,25 @@ IncorrectPassword = HTTPException(
     detail="пароли не совпадают"
 )
 
-IncorrectEmail = HTTPException(
-    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+IncorrectFormatEmail = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
     detail="Почта не действительна"
+)
+
+TokenExpiredException = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Время токена истекло"
+    )
+
+TokenAbsentException = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Токена не существует"
+)
+IncorrectTokenFormatExcpetion = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Неверный формат токена"
+)
+
+UserIsNotPresent = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED
 )

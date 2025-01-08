@@ -8,15 +8,15 @@ from anonymous_chat.main import app
     ("testik1@mail.ru", "+79877877933", "password1", "password1", 200),
     ("testik2@mail.ru", "+79877877934", "password2", "password22", 400),
     ("testik3@mail.ru", "+79098087733", "password3", "password3", 200),
-    ("testik4@mail.ru", "+79877870000007936", "password", "password", 200),
+    ("testik4@mail.ru", "+79877870000007936", "password", "password", 422),
     ("testik5@mail.ru", "str", "password", "password", 422),
     ("testik1@mail.ru", "+79877877939", "password", "password", 409),
-    ("strstrstr", "+79877877940", "password", "password", 422),
+    ("strstrstr", "+79877877940", "password", "password", 400),
 ])
 @pytest.mark.asyncio
 async def test_register_user(email, phone_number, confirm_password, password, status_code):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/user/auth/register", json={
+        response = await client.post("/auth/register", json={
             "email": email,
             "phone_number": phone_number,
             "password": password,
@@ -26,15 +26,15 @@ async def test_register_user(email, phone_number, confirm_password, password, st
 
 
 @pytest.mark.parametrize("email,password,status_code", [
-    ("testik1@mail.ru", "password", 200),
+    ("testik1@mail.ru", "password1", 200),
     ("testik1@mail.ru", "password9999", 400),
     ("testik32@mail.ru", "password", 400),
-    ("testik1", "password", 422),
+    ("testik1", "password", 400),
 ])
 @pytest.mark.asyncio
 async def test_login_user(email, password, status_code):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/user/auth/login", json={
+        response = await client.post("/auth/login", json={
             "email": email,
             "password": password
         })

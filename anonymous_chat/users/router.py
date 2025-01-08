@@ -1,8 +1,7 @@
 from datetime import datetime
 import re
 
-# from math import e
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import jwt
 
@@ -17,12 +16,13 @@ from anonymous_chat.users.auth import (
     send_confirmation_email,
     send_sms,
 )
+from anonymous_chat.users.dependencies import get_current_user
 from anonymous_chat.users.models import CustomOAuth2PasswordRequestForm, User
 from anonymous_chat.users.schemas import SUserRegister, SVerifyPhone
 from anonymous_chat.users.dao import UserDAO
 from anonymous_chat.config import settings
 from anonymous_chat.Exceptions import (
-    IncorrectEmail,
+    IncorrectFormatEmail,
     IncorrectEmailOrPasswordException,
     IncorrectPassword,
     IncorrectToken,
@@ -34,7 +34,10 @@ from anonymous_chat.Exceptions import (
 import logging
 
 
-router = APIRouter(prefix="/user", tags=["Auth & Пользователи"])
+router = APIRouter(
+    prefix="",
+    tags=["Auth & Пользователи"]
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,9 +53,15 @@ async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
     :param db: получает сессию в БД для добавления пользователя
     :retur: Сообщение "Вы успешно зарегестрировались"
     """
+    if not re.match(
+        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", user.email
+    ):
+        raise IncorrectFormatEmail
+
     existing_user = await UserDAO.find_one_or_none(db=db, email=user.email.lower())
     if existing_user:
         raise UserAlreadyExistException
+
     if user.password != user.confirm_password:
         raise IncorrectPassword
 
@@ -75,33 +84,41 @@ async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
 
 @router.post("/auth/login")
 async def login_user(
-    form_data: CustomOAuth2PasswordRequestForm = Depends(),
+    response: Response,
+    form_data: CustomOAuth2PasswordRequestForm,
     db: AsyncSession = Depends(get_db),
 ):
     """
     Функция Логина пользователя. Проверяет действительна ли функция и существует ли пользователь
     если нет, возвращает ошибку IncorrecrtLoginOrPasswordExcaption
-    если да, создает токен, для входа
+    если да, создает токен в куках для входа
 
     :param form_data: кастомная форма входа
     :param db: сессия ДБ
     :return: Сообщение о успешном входе, токен и формат токена
     """
-
     if not re.match(
         r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", form_data.email
     ):
-        raise IncorrectEmail
+        raise IncorrectFormatEmail
+
     user = await authenticate_user(form_data.email, form_data.password, db)
 
     if not user:
         raise IncorrectEmailOrPasswordException
     access_token = await create_acces_token({"sub": str(user.id)})
-    return {
-        "msg": f"Добро пожаловать Пользователь - {user.id}",
-        "access_token": access_token,
-        "token_type": "bearer",
-    }
+    response.set_cookie("anon_access_token", access_token, httponly=True,)
+    return access_token
+
+
+@router.post("/user/logout")
+async def logout_user(response: Response):
+    response.delete_cookie("anon_access_token")
+
+
+@router.get("/user/me")
+async def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
 
 
 @router.get("/confirm-email")

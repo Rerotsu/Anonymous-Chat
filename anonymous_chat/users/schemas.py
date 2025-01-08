@@ -13,7 +13,7 @@ class SUserRegister(BaseModel):
         try:
             phone = phonenumbers.parse(value)
             if not phonenumbers.is_valid_number(phone):
-                raise ValueError("Неверный номер телефона(неверный телефонный индекс)")
+                raise ValueError("Неверный номер телефона или неверный телефонный индекс")
             return value
         except phonenumbers.NumberParseException:
             raise ValueError("Неверный формат номера телефона")

@@ -30,7 +30,7 @@ async def verify_password(plain_password, hashed_password) -> bool:
 
 async def create_acces_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(hours=2)
+    expire = datetime.now(timezone.utc) + timedelta(hours=168)
     to_encode.update({"exp": expire, "sub": data.get("email")})
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, settings.ALGORITHM
@@ -98,7 +98,6 @@ async def verify_token(token: str) -> TokenData:
 
 
 async def authenticate_user(identifier: str, password: str, db: AsyncSession = Depends(get_db)):
-    # Сначала проверяем по email
     user = await UserDAO.find_one_or_none(db=db, email=identifier)
     if not user or not await verify_password(password, user.hashed_password):
         return None

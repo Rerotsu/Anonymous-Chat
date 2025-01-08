@@ -1,12 +1,12 @@
-from datetime import datetime
-import json
+# from datetime import datetime
+# import json
 import pytest_asyncio
-from sqlalchemy import insert, text
+# from sqlalchemy import insert, text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from anonymous_chat.config import settings
-from anonymous_chat.database import async_session_maker, Base
-from anonymous_chat.users.models import User
+from anonymous_chat.database import Base
+# from anonymous_chat.users.models import User
 
 # Создание асинхронного движка и сессии
 async_engine = create_async_engine(settings.TEST_DATABASE_URL, echo=True)
@@ -28,7 +28,7 @@ async def prepare_database():
     #             if 'created' in user:
     #                 user['created'] = datetime.fromisoformat(user['created'])
     #         return data
-        
+
     # users = open_mock_json("users")
 
     # async with async_session_maker() as session:
