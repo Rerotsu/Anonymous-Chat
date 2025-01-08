@@ -30,8 +30,8 @@ async def verify_password(plain_password, hashed_password) -> bool:
 
 async def create_acces_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(hours=168)
-    to_encode.update({"exp": expire, "sub": data.get("email")})
+    expire = datetime.now(timezone.utc) + timedelta(weeks=1)
+    to_encode.update({"exp": expire, "sub": data.get("sub")})
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, settings.ALGORITHM
     )

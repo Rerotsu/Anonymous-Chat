@@ -58,7 +58,7 @@ TokenAbsentException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail="Токена не существует"
 )
-IncorrectTokenFormatExcpetion = HTTPException(
+IncorrectTokenFormatException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail="Неверный формат токена"
 )

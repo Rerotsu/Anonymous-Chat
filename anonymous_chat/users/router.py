@@ -57,7 +57,10 @@ async def register(user: SUserRegister, db: AsyncSession = Depends(get_db)):
         r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", user.email
     ):
         raise IncorrectFormatEmail
+    """
+    надо добавить проверку на номер телефона
 
+    """
     existing_user = await UserDAO.find_one_or_none(db=db, email=user.email.lower())
     if existing_user:
         raise UserAlreadyExistException
