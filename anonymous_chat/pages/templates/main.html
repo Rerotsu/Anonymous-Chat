@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Чат</title>
+    <title>Анонимный Чат</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,23 +12,19 @@
             margin: 0;
             padding: 0;
         }
-
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
-
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .user-id {
             font-size: 18px;
         }
-
         button {
             background-color: #444;
             color: white;
@@ -36,29 +32,33 @@
             padding: 10px 15px;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #555;
         }
-
-        .chat-container {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .chat-box {
+        #chat {
             border: 1px solid #444;
             height: 300px;
-            overflow-y: auto;
+            overflow-y: scroll;
             padding: 10px;
-            margin-bottom: 10px;
             background-color: #222;
+            margin-bottom: 10px;
         }
-
+        .message {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .user1 {
+            background-color: #4caf50; /* Зеленый для пользователя 1 */
+            text-align: left;
+        }
+        .user2 {
+            background-color: #2196f3; /* Синий для пользователя 2 */
+            text-align: right;
+        }
         .message-input-container {
             display: flex;
         }
-
         #messageInput {
             flex: 1;
             padding: 10px;
@@ -66,9 +66,12 @@
             background-color: #222;
             color: white;
         }
-
         #messageInput::placeholder {
             color: #aaa;
+        }
+        #status {
+            text-align: center;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -78,70 +81,84 @@
             <div class="user-id">ID - <span id="userId"></span></div>
             <button id="logoutButton">Log Out</button>
         </header>
-        
-        <main>
-            <div class="chat-container">
-                <div class="chat-box" id="chatBox">
-                    <!-- Сообщения будут добавлены сюда -->
-                </div>
-                <button id="findChatButton">Найти чат</button>
-            </div>
 
+        <main>
+            <h1>Анонимный Чат</h1>
+            <button id="findChat">Найти чат</button>
+            <p id="status"></p>
+            <div id="chat"></div>
             <div class="message-input-container">
-                <input type="text" id="messageInput" placeholder="Введите сообщение...">
-                <button id="sendMessageButton">Отправить</button>
+                <input type="text" id="messageInput" placeholder="Введите сообщение..." />
+                <button id="sendMessage">Отправить</button>
             </div>
+            <div id="statusMessage"></div> <!-- Для отображения статуса -->
         </main>
     </div>
 
     <script>
         const userIdElement = document.getElementById('userId');
         const logoutButton = document.getElementById('logoutButton');
-        const findChatButton = document.getElementById('findChatButton');
+        const findChatButton = document.getElementById('findChat');
         const messageInput = document.getElementById('messageInput');
-        const sendMessageButton = document.getElementById('sendMessageButton');
-        const chatBox = document.getElementById('chatBox');
+        const sendMessageButton = document.getElementById('sendMessage');
+        const chatDiv = document.getElementById('chat');
+        const statusMessage = document.getElementById('status');
 
-        // Функция для получения ID пользователя
+        let websocket;
+
         async function getUserId() {
             const response = await fetch('/user/me');
             if (response.ok) {
                 const user = await response.json();
-                userIdElement.textContent = user.id; // Предполагаем, что объект пользователя имеет поле 'id'
+                userIdElement.textContent = user.id; // Отображаем ID пользователя
+                return user.id; // Возвращаем ID пользователя
             } else {
-                // Если пользователь не авторизован, перенаправляем на страницу логина/регистрации
-                window.location.href = '/pages/log_reg';
+                window.location.href = '/pages/log_reg'; // Перенаправляем на страницу логина/регистрации
             }
         }
 
-        // Функция для обработки выхода из системы
-        logoutButton.addEventListener('click', async () => {
-            await fetch('/user/logout', { method: 'POST' });
-            window.location.reload(); // Перезагрузить страницу после выхода
-        });
+        document.getElementById('findChat').onclick = function() {
+            document.getElementById('status').innerText = "Поиск чата...";
+            websocket = new WebSocket("ws://localhost:8000/ws/chat?user_id=${userId}");
 
-        // Функция для отправки сообщения
-        sendMessageButton.addEventListener('click', async () => {
-            const messageContent = messageInput.value;
-            if (messageContent) {
-                // Здесь вы можете добавить логику для отправки сообщения через вебсокеты
-                // Например:
-                // websocket.send(JSON.stringify({ type: 'send_message', content: messageContent }));
-                chatBox.innerHTML += `<div>${messageContent}</div>`; // Добавление сообщения в чат
-                messageInput.value = ''; // Очистить поле ввода
+            websocket.onopen = function() {
+                document.getElementById('status').innerText = "Чат найден!";
+            };
+
+            websocket.onmessage = function(event) {
+                const message = event.data; // Получаем сообщение
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user2'; // Сообщение от другого пользователя
+                messageDiv.innerText = message; // Отображаем зашифрованное сообщение
+                chatDiv.appendChild(messageDiv);
+                chatDiv.scrollTop = chatDiv.scrollHeight;  // Прокрутка вниз
+            };
+        };
+
+        sendMessageButton.onclick = function() {
+            const message = messageInput.value;
+            if (message) {
+                websocket.send(message); // Отправляем сообщение напрямую
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user1'; // Сообщение от текущего пользователя
+                messageDiv.innerText = `Вы: ${message}`;
+                chatDiv.appendChild(messageDiv);
+                chatDiv.scrollTop = chatDiv.scrollHeight;  // Прокрутка вниз
+                messageInput.value = '';  // Очистка поля ввода
             }
-        });
+        };
 
-        // Функция для нахождения чата
-        findChatButton.addEventListener('click', () => {
-            // Здесь вы можете добавить логику для нахождения чата через вебсокеты
-            // Например:
-            // websocket.send(JSON.stringify({ type: 'find_chat' }));
-            alert('Функция поиска чата пока не реализована.'); // Заглушка
-        });
+        logoutButton.onclick = async function() {
+            await fetch('/user/logout', { method: 'POST' });
+            window.location.reload(); // Перезагружаем страницу после выхода
+        };
 
         // Инициализация страницы
-        getUserId();
+        getUserId().then(() => {
+            console.log("User  ID загружен");
+            // Вы можете здесь добавить вызов для инициализации WebSocket, если это необходимо
+        });
     </script>
 </body>
 </html>
+

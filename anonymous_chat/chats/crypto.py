@@ -1,4 +1,4 @@
-from crypto import AES
+from Cryptodome.Cipher import AES
 import base64
 import os
 

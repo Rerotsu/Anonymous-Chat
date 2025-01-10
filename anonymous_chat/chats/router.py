@@ -1,72 +1,48 @@
-
-import json
-from fastapi import APIRouter, Depends, WebSocket
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from anonymous_chat.chats.messages.dao import MessageDAO
-from anonymous_chat.users.dao import UserDAO
+from collections import deque
+from fastapi import APIRouter, Query, WebSocket
+from anonymous_chat.chats.crypto import encrypt, generate_key
 from anonymous_chat.chats.dao import ChatDAO
-from anonymous_chat.database import get_db
-
 
 router = APIRouter(
-    prefix="/chat",
+    prefix="",
     tags=["Чат"]
 )
 
+waiting_users = deque()  # Очередь пользователей, ожидающих чат
+active_connections = {}
 
-@router.websocket("/ce")
-async def chat_endpoint(websocket: WebSocket, db: AsyncSession = Depends(get_db)):
+
+@router.websocket("/ws/chat")
+async def chat_websocket(websocket: WebSocket, user_id: int = Query(...)):
+    print(user_id)
+    print('0000000000')
     await websocket.accept()
-    chats_dao = ChatDAO()
-    messages_dao = MessageDAO()
+    key = generate_key()  # Генерация ключа один раз при подключении
+    waiting_users.append(websocket)  # Добавляем пользователя в очередь
+    active_connections[websocket] = user_id
+    print('111111111')
+    if len(waiting_users) >= 2:
+        user1_ws = waiting_users.popleft()
+        user2_ws = waiting_users.popleft()
+        print("1/5.1/5.1/5")
+        user1_id = active_connections[user1_ws]
+        user2_id = active_connections[user2_ws]
+        print("2222222222222")
+        chat_id = await ChatDAO.create_chat_for_users(user1_id, user2_id)
+        await user1_ws.send_text(f"You are now in chat {chat_id}")
+        await user2_ws.send_text(f"You are now in chat {chat_id}")
+        print('333333333333333')
+        # Основной цикл для обработки сообщений
+        while True:
+            try:
+                data = await user1_ws.receive_text()
+                encrypted_message = encrypt(data, key)
+                await user2_ws.send_text(f"Пользователь 1: {encrypted_message}")
 
-    while True:
-        data = await websocket.receive_text()
-        data = json.loads(data)
+                data = await user2_ws.receive_text()
+                encrypted_message = encrypt(data, key)
+                await user1_ws.send_text(f"Пользователь 2: {encrypted_message}")
 
-        if data['type'] == 'find_chat':
-            chat_data = {
-                "id": data['id']
-            }
-            await chats_dao.create_chat(chat_data, db)
-            await websocket.send_text("Чат создан")
-
-        elif data['type'] == 'send_message':
-            message_data = {
-                "chat_id": data['chat_id'],
-                "user_id": data['user_id'],
-                "content": data['content']
-            }
-            await messages_dao.create_message(message_data, db)
-            await websocket.send_text("Сообщение отправлено")
-
-        elif data['type'] == 'get_messages':
-            chat_id = data['chat_id']
-            messages = await messages_dao.get_messages(chat_id, db)
-            await websocket.send_text(json.dumps(messages))
-
-        elif data['type'] == 'get_user_info':
-            user_id = data['user_id']
-            user_info = await UserDAO.get_user_info(user_id, db)
-            await websocket.send_text(json.dumps(user_info))
-"""
-        elif data['type'] == 'delete_message':
-            message_id = data['message_id']
-            await messages_dao.delete_message(message_id, db)
-            await websocket.send_text("Сообщение удалено")
-
-        elif data['type'] == 'send_notification':
-            notification_data = {
-                "chat_id": data['chat_id'],
-                "user_id": data['user_id'],
-                "content": data['content']
-            }
-            await notifications_dao.create_notification(notification_data, db)
-            await websocket.send_text("Уведомление отправлено")
-
-        elif data['type'] == 'get_notifications':
-            chat_id = data['chat_id']
-            notifications = await notifications_dao.get_notifications(chat_id, db)
-            await websocket.send_text(json.dumps(notifications))
-"""
+            except Exception as e:
+                print("Ошибка", e)
+                break

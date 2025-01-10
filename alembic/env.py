@@ -9,7 +9,7 @@ from anonymous_chat.config import settings # noqa
 from anonymous_chat.database import Base # noqa
 from anonymous_chat.chats.model import Chat  # noqa
 from anonymous_chat.users.models import User # noqa
-from anonymous_chat.chats.messages.model import Message # noqa 
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

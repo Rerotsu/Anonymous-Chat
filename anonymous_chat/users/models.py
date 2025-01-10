@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from sqlalchemy.orm import relationship
-
 from typing import Annotated
 from anyio import current_time
 from fastapi import Form
@@ -24,9 +22,6 @@ class User(Base):
     phone_token_verify = Column(String, nullable=True)
     is_banned = Column(Boolean, nullable=False, default=False)
     created = Column(TIMESTAMP, nullable=False, default=current_time)
-
-    messages = relationship("Message", back_populates="user")
-    chat_participants = relationship("ChatParticipants", back_populates="user")
 
     def __str__(self):
         return f"Пользователь: {self.id},{self.email},{self.phone_number}"
