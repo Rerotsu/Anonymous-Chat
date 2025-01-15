@@ -76,6 +76,7 @@
     </style>
 </head>
 <body>
+    <span id="userIdElement"></span>
     <div class="container">
         <header>
             <div class="user-id">ID - <span id="userId"></span></div>
@@ -110,41 +111,64 @@
             const response = await fetch('/user/me');
             if (response.ok) {
                 const user = await response.json();
-                userIdElement.textContent = user.id; // Отображаем ID пользователя
+                const userIdElement = document.getElementById('userIdElement'); // Получаем элемент по ID
+                if (userIdElement) {
+                    userIdElement.textContent = user.id; // Устанавливаем текст элемента
+                }
                 return user.id; // Возвращаем ID пользователя
             } else {
                 window.location.href = '/pages/log_reg'; // Перенаправляем на страницу логина/регистрации
             }
         }
 
-        document.getElementById('findChat').onclick = function() {
+        document.getElementById('findChat').onclick = async function() {
             document.getElementById('status').innerText = "Поиск чата...";
-            websocket = new WebSocket("ws://localhost:8000/ws/chat?user_id=${userId}");
+            const userId = await getUserId(); // Ждем, пока получим ID пользователя
+            if (userId) { // Проверяем, что userId был успешно получен
+                console.log(`Подключение к WebSocket с user_id: ${userId}`); // Логирование ID пользователя
+                websocket = new WebSocket(`ws://localhost:8000/ws/chat?user_id=${userId}`); // Используем полученный ID
 
-            websocket.onopen = function() {
-                document.getElementById('status').innerText = "Чат найден!";
-            };
+                // Установка обработчиков событий после создания WebSocket
+                websocket.onopen = function() {
+                    document.getElementById('status').innerText = "Чат найден!";
+                };
 
-            websocket.onmessage = function(event) {
-                const message = event.data; // Получаем сообщение
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message user2'; // Сообщение от другого пользователя
-                messageDiv.innerText = message; // Отображаем зашифрованное сообщение
-                chatDiv.appendChild(messageDiv);
-                chatDiv.scrollTop = chatDiv.scrollHeight;  // Прокрутка вниз
-            };
+                websocket.onmessage = function(event) {
+                    const message = event.data; // Получаем сообщение
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message user2'; // Сообщение от другого пользователя
+                    messageDiv.innerText = message; // Отображаем зашифрованное сообщение
+                    chatDiv.appendChild(messageDiv);
+                    chatDiv.scrollTop = chatDiv.scrollHeight;  // Прокрутка вниз
+                };
+
+                websocket.onerror = function(event) {
+                    console.error("WebSocket ошибка:", event);
+                };
+
+                websocket.onclose = function(event) {
+                    console.log("WebSocket соединение закрыто:", event);
+                };
+
+            } else {
+                console.error("Не удалось получить ID пользователя."); // Логируем ошибку, если ID не получен
+            }
         };
 
         sendMessageButton.onclick = function() {
             const message = messageInput.value;
-            if (message) {
-                websocket.send(message); // Отправляем сообщение напрямую
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message user1'; // Сообщение от текущего пользователя
-                messageDiv.innerText = `Вы: ${message}`;
-                chatDiv.appendChild(messageDiv);
-                chatDiv.scrollTop = chatDiv.scrollHeight;  // Прокрутка вниз
-                messageInput.value = '';  // Очистка поля ввода
+            if (websocket && websocket.readyState === WebSocket.OPEN) { // Проверяем, что WebSocket открыт
+                if (message) {
+                    websocket.send(message); // Отправляем сообщение напрямую
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message user1'; // Сообщение от текущего пользователя
+                    messageDiv.innerText = `Вы: ${message}`;
+                    chatDiv.appendChild(messageDiv);
+                    chatDiv.scrollTop = chatDiv.scrollHeight;  // Прокрутка вниз
+                    messageInput.value = '';  // Очистка поля ввода
+                }
+            } else {
+                console.error("WebSocket не открыт. Сообщение не отправлено.");
             }
         };
 
@@ -156,7 +180,6 @@
         // Инициализация страницы
         getUserId().then(() => {
             console.log("User  ID загружен");
-            // Вы можете здесь добавить вызов для инициализации WebSocket, если это необходимо
         });
     </script>
 </body>
